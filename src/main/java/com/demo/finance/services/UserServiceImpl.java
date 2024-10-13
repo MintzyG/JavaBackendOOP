@@ -1,19 +1,12 @@
 package com.demo.finance.services;
 
-import com.demo.finance.Constants;
 import com.demo.finance.exceptions.FinancesAuthException;
 import com.demo.finance.models.User;
 import com.demo.finance.repositories.UserRepository;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.Signature;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 @Service
