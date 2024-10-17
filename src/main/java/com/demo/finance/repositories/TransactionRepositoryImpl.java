@@ -70,7 +70,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
 
     @Override
     public void removeById(Integer user_id, Integer category_id, Integer transaction_id) throws FinanceResourceNotFoundException {
-    int count = JdbcTemplate.update(SQL_DELETE, new Object[]{user_id, categoty_id, transaction_id});
+    int count = jdbcTemplate.update(SQL_DELETE, new Object[]{user_id, category_id, transaction_id});
     if(count == 0)
         throw new FinanceResourceNotFoundException("Transaction not found");
     }
@@ -80,9 +80,9 @@ public class TransactionRepositoryImpl implements TransactionRepository {
                 rs.getInt("TRANSACTION_ID"),
                 rs.getInt("CATEGORY_ID"),
                 rs.getInt("USER_ID"),
-                rs.getDouble("AMOUNT"),
+                rs.getLong("TRANSACTION_DATE"),
                 rs.getString("NOTE"),
-                rs.getLong("TRANSACTION_DATE")
+                rs.getDouble("AMOUNT")
         );
     });
 
