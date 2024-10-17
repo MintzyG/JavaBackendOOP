@@ -19,12 +19,12 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<Category> fetchAllCategories(Integer user_id) {
-        return List.of();
+        return categoryRepository.findAll(user_id);
     }
 
     @Override
     public Category fetchCategoryById(Integer user_id, Integer category_id) throws FinanceResourceNotFoundException {
-        return null;
+        return categoryRepository.findById(user_id, category_id);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void updateCategory(Integer user_id, Integer category_id, Category category) throws FinanceBadRequestException {
-
+        categoryRepository.update(user_id, category_id, category);
     }
 
     @Override
