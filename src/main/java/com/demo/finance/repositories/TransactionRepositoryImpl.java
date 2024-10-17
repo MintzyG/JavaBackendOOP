@@ -76,6 +76,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
         return new Transaction(
                 rs.getInt("TRANSACTION_ID"),
                 rs.getInt("CATEGORY_ID"),
+                rs.getInt("USER_ID"),
                 rs.getDouble("AMOUNT"),
                 rs.getString("NOTE"),
                 rs.getLong("TRANSACTION_DATE")

@@ -56,7 +56,7 @@ public class TransactionController {
                                                                   @RequestBody Transaction transaction) {
         int user_id = (Integer) request.getAttribute("user_id");
         transactionService.updateTransaction(user_id, category_id, transaction_id, transaction);
-        Map<String, Boolean> map = new HashMap();2
+        Map<String, Boolean> map = new HashMap();
         map.put("success", true);
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
