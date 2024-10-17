@@ -37,11 +37,11 @@ public class TransactionServiceImpl implements TransactionService{
 
     @Override
     public void updateTransaction(Integer user_id, Integer category_id, Integer transaction_id, Transaction transaction) throws FinanceBadRequestException {
-    transactionRepository.update(user_id, category_id, transaction_id, transaction);
+        transactionRepository.update(user_id, category_id, transaction_id, transaction);
     }
 
     @Override
     public void removeTransaction(Integer user_id, Integer category_id, Integer transaction_id) throws FinanceResourceNotFoundException {
-
+        transactionRepository.removeById(user_id, category_id, transaction_id);
     }
 }

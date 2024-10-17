@@ -56,7 +56,18 @@ public class TransactionController {
                                                                   @RequestBody Transaction transaction) {
         int user_id = (Integer) request.getAttribute("user_id");
         transactionService.updateTransaction(user_id, category_id, transaction_id, transaction);
-        Map<String, Boolean> map = new HashMap();
+        Map<String, Boolean> map = new HashMap<>();
+        map.put("success", true);
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{transaction_id}")
+    public ResponseEntity<Map<String, Boolean>> deleteTransaction(HttpServletRequest request,
+                                                                  @PathVariable("category_id") Integer category_id,
+                                                                  @PathVariable("transaction_id") Integer transaction_id) {
+        int user_id = (Integer) request.getAttribute("user_id");
+        transactionService.removeTransaction(user_id, category_id, transaction_id);
+        Map<String, Boolean> map = new HashMap<>();
         map.put("success", true);
         return new ResponseEntity<>(map, HttpStatus.OK);
     }

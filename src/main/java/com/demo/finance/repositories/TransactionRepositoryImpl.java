@@ -20,6 +20,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
     private static final String SQL_FIND_BY_ID = "SELECT TRANSACTION_ID, CATEGORY_ID, USER_ID, AMOUNT, NOTE, TRANSACTION_DATE, FROM ET_TRANSACTIONS WHERE USER_ID = ? AND CATEGORY_ID = ? AND TRANSACTION_ID = ?";
     private static final String SQL_CREATE = "INSERT INTO ET_TRANSACTIONS (TRANSACTION_ID, CATEGORY_ID, USER_ID, AMOUNT, NOTE, TRANSACTION_DATE) VALUES('ET_TRANSACTIONS_SEQ'), ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = "UPDATE ET_TRANSACTIONS SET AMOUNT = ?, NOTE = ?, TRANSACTION_DATE = ? WHERE USER_ID = ? AND CATEGORY_ID = ? AND TRANSACTION_ID = ?";
+    private static final String SQL_DELETE = "DELETE FROM ET_TRANSACTIONS WHERE USER_ID = ? AND CATEGORY_ID = ? AND TRANSACTION_ID = ?";
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -69,7 +70,9 @@ public class TransactionRepositoryImpl implements TransactionRepository {
 
     @Override
     public void removeById(Integer user_id, Integer category_id, Integer transaction_id) throws FinanceResourceNotFoundException {
-
+    int count = JdbcTemplate.update(SQL_DELETE, new Object[]{user_id, categoty_id, transaction_id});
+    if(count == 0)
+        throw new FinanceResourceNotFoundException("Transaction not found");
     }
 
     private RowMapper<Transaction> transactionRowMapper = ((rs, rowNum) -> {

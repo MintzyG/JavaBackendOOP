@@ -39,7 +39,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void deleteCategoryWithAllTransactions(Integer user_id, Integer category_id) throws FinanceResourceNotFoundException {
-
+    public void removeCategoryWithAllTransactions(Integer user_id, Integer category_id) throws FinanceResourceNotFoundException {
+        this.fetchCategoryById(user_id, category_id);
+        categoryRepository.removeById(user_id, category_id);
     }
 }
