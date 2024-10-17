@@ -11,7 +11,7 @@ public interface TransactionRepository {
 
     Transaction findById(Integer user_id, Integer category_id, Integer transaction_id) throws FinanceResourceNotFoundException;
 
-    Integer create(Integer user_id, Integer category_id, Double amount, String note, Long Transaction_date) throws FinanceBadRequestException;
+    Integer create(Integer user_id, Integer category_id, Double amount, String note, Long transaction_date) throws FinanceBadRequestException;
 
     void update(Integer user_id, Integer category_id, Integer transactionId, Transaction transaction) throws FinanceBadRequestException;
 
