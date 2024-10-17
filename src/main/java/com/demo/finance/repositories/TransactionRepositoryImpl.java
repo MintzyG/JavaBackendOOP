@@ -16,15 +16,17 @@ import java.util.List;
 @Repository
 public class TransactionRepositoryImpl implements TransactionRepository {
 
+    private static final String SQL_FIND_ALL = "SELECT TRANSACTION_ID, CATEGORY_ID, USER_ID, AMOUNT, NOTE, TRANSACTION_DATE, FROM ET_TRANSACTIONS WHERE USER_ID = ? AND CATEGORY_ID = ?";
     private static final String SQL_FIND_BY_ID = "SELECT TRANSACTION_ID, CATEGORY_ID, USER_ID, AMOUNT, NOTE, TRANSACTION_DATE, FROM ET_TRANSACTIONS WHERE USER_ID = ? AND CATEGORY_ID = ? AND TRANSACTION_ID = ?";
     private static final String SQL_CREATE = "INSERT INTO ET_TRANSACTIONS (TRANSACTION_ID, CATEGORY_ID, USER_ID, AMOUNT, NOTE, TRANSACTION_DATE) VALUES('ET_TRANSACTIONS_SEQ'), ?, ?, ?, ?, ?)";
+    private static final String SQL_UPDATE = "UPDATE ET_TRANSACTIONS SET AMOUNT = ?, NOTE = ?, TRANSACTION_DATE = ? WHERE USER_ID = ? AND CATEGORY_ID = ? AND TRANSACTION_ID = ?";
 
     @Autowired
     JdbcTemplate jdbcTemplate;
 
     @Override
     public List<Transaction> findAll(Integer user_id, Integer category_id) {
-        return List.of();
+        return jdbcTemplate.query(SQL_FIND_ALL, new Object[]{user_id, category_id}, transactionRowMapper);
     }
 
     @Override
@@ -56,8 +58,13 @@ public class TransactionRepositoryImpl implements TransactionRepository {
     }
 
     @Override
-    public void update(Integer user_id, Integer category_id, Integer transactionId, Transaction transaction) throws FinanceBadRequestException {
+    public void update(Integer user_id, Integer category_id, Integer transaction_id, Transaction transaction) throws FinanceBadRequestException {
+        try {
+            jdbcTemplate.update(SQL_UPDATE, new Object[]{transaction.getAmount(), transaction.getNote(), transaction.getTransaction_date(), user_id, category_id, transaction_id});
+        }catch (Exception e) {
+            throw new FinanceBadRequestException("Invalid request");
 
+        }
     }
 
     @Override

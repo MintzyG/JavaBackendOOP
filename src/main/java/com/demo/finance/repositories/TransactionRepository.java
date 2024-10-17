@@ -13,7 +13,7 @@ public interface TransactionRepository {
 
     Integer create(Integer user_id, Integer category_id, Double amount, String note, Long transaction_date) throws FinanceBadRequestException;
 
-    void update(Integer user_id, Integer category_id, Integer transactionId, Transaction transaction) throws FinanceBadRequestException;
+    void update(Integer user_id, Integer category_id, Integer transaction_id, Transaction transaction) throws FinanceBadRequestException;
 
     void removeById(Integer user_id, Integer category_id, Integer transaction_id) throws FinanceResourceNotFoundException;
 }

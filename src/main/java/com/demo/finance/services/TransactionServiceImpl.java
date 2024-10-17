@@ -21,12 +21,12 @@ public class TransactionServiceImpl implements TransactionService{
 
     @Override
     public List<Transaction> fetchAllTransactions(Integer user_id, Integer category_id) {
-        return List.of();
+        return transactionRepository.findAll(user_id, category_id);
     }
 
     @Override
     public Transaction fetchTransactionById(Integer user_id, Integer category_id, Integer transaction_id) throws FinanceResourceNotFoundException {
-        return null;
+        return transactionRepository.findById(user_id, category_id, transaction_id);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class TransactionServiceImpl implements TransactionService{
 
     @Override
     public void updateTransaction(Integer user_id, Integer category_id, Integer transaction_id, Transaction transaction) throws FinanceBadRequestException {
-
+        transactionRepository.update(user_id, category_id, transaction_id, transaction);
     }
 
     @Override
