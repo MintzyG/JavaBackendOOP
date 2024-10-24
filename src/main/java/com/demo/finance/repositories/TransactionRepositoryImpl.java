@@ -16,11 +16,12 @@ import java.util.List;
 @Repository
 public class TransactionRepositoryImpl implements TransactionRepository {
 
-    private static final String SQL_FIND_ALL = "SELECT TRANSACTION_ID, CATEGORY_ID, USER_ID, AMOUNT, NOTE, TRANSACTION_DATE, FROM ET_TRANSACTIONS WHERE USER_ID = ? AND CATEGORY_ID = ?";
-    private static final String SQL_FIND_BY_ID = "SELECT TRANSACTION_ID, CATEGORY_ID, USER_ID, AMOUNT, NOTE, TRANSACTION_DATE, FROM ET_TRANSACTIONS WHERE USER_ID = ? AND CATEGORY_ID = ? AND TRANSACTION_ID = ?";
-    private static final String SQL_CREATE = "INSERT INTO ET_TRANSACTIONS (TRANSACTION_ID, CATEGORY_ID, USER_ID, AMOUNT, NOTE, TRANSACTION_DATE) VALUES('ET_TRANSACTIONS_SEQ'), ?, ?, ?, ?, ?)";
-    private static final String SQL_UPDATE = "UPDATE ET_TRANSACTIONS SET AMOUNT = ?, NOTE = ?, TRANSACTION_DATE = ? WHERE USER_ID = ? AND CATEGORY_ID = ? AND TRANSACTION_ID = ?";
-    private static final String SQL_DELETE = "DELETE FROM ET_TRANSACTIONS WHERE USER_ID = ? AND CATEGORY_ID = ? AND TRANSACTION_ID = ?";
+    private static final String SQL_FIND_ALL = "SELECT transaction_id, category_id, user_id, amount, note, transaction_date FROM transactions WHERE user_id = ? AND category_id = ?";
+    private static final String SQL_FIND_BY_ID = "SELECT transaction_id, category_id, user_id, amount, note, transaction_date FROM transactions WHERE user_id = ? AND category_id = ? AND transaction_id = ?";
+    private static final String SQL_CREATE = "INSERT INTO transactions (transaction_id, category_id, user_id, amount, note, transaction_date) VALUES('trans_seq', ?, ?, ?, ?, ?)";
+    private static final String SQL_UPDATE = "UPDATE transactions SET amount = ?, note = ?, transaction_date = ? WHERE user_id = ? AND category_id = ? AND transaction_id = ?";
+    private static final String SQL_DELETE = "DELETE FROM transactions WHERE user_id = ? AND category_id = ? AND transaction_id = ?";
+
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -35,7 +36,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
         try{
             return jdbcTemplate.queryForObject(SQL_FIND_BY_ID, new Object[]{user_id, category_id, transaction_id}, transactionRowMapper);
         }catch(Exception e){
-            throw new FinanceResourceNotFoundException("Transaction not found");
+            throw new FinanceResourceNotFoundException("Transaction not found" + e.getMessage());
         }
     }
 
@@ -52,9 +53,9 @@ public class TransactionRepositoryImpl implements TransactionRepository {
                 ps.setLong(5, transaction_date);
                 return ps;
             }, keyHolder);
-            return (Integer) keyHolder.getKeys().get("TRANSACTION_ID");
+            return (Integer) keyHolder.getKeys().get("transaction_id");
         }catch (Exception e) {
-            throw new FinanceBadRequestException("Invalid request");
+            throw new FinanceBadRequestException("Invalid request" + e.getMessage());
         }
     }
 
@@ -63,7 +64,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
         try {
             jdbcTemplate.update(SQL_UPDATE, new Object[]{transaction.getAmount(), transaction.getNote(), transaction.getTransaction_date(), user_id, category_id, transaction_id});
         }catch (Exception e) {
-            throw new FinanceBadRequestException("Invalid request");
+            throw new FinanceBadRequestException("Invalid request" + e.getMessage());
 
         }
     }
@@ -77,12 +78,12 @@ public class TransactionRepositoryImpl implements TransactionRepository {
 
     private RowMapper<Transaction> transactionRowMapper = ((rs, rowNum) -> {
         return new Transaction(
-                rs.getInt("TRANSACTION_ID"),
-                rs.getInt("CATEGORY_ID"),
-                rs.getInt("USER_ID"),
-                rs.getLong("TRANSACTION_DATE"),
-                rs.getString("NOTE"),
-                rs.getDouble("AMOUNT")
+                rs.getInt("transaction_id"),
+                rs.getInt("category_id"),
+                rs.getInt("user_id"),
+                rs.getLong("transaction_date"),
+                rs.getString("note"),
+                rs.getDouble("amount")
         );
     });
 

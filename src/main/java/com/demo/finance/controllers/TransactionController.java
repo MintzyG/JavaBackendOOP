@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/categories/{category_id}/transactions")
+@RequestMapping("/api/v1/categories/{category_id}/transactions")
 public class TransactionController {
 
     @Autowired

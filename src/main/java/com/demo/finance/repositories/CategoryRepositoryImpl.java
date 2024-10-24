@@ -27,10 +27,10 @@ public class CategoryRepositoryImpl implements CategoryRepository {
             "COALESCE(SUM(t.amount), 0) total_expense " +
             "FROM transactions t RIGHT OUTER JOIN categories c ON c.category_id = t.category_id " +
             "WHERE c.user_id = ? AND c.category_id = ? GROUP BY c.category_id ";
-    private static final String SQL_UPDATE = "UPDATE ET_CATEGORIES SET TITLE = ?, DESCRIPTION = ?" +
-            "WHERE USER_ID = ? AND CATEGORY_ID = ?";
-    private static final String SQL_DELETE_CATEGORY = "DELETE FROM ET_CATEGORIES WHERE USER_ID = ? AND CATEGORY_ID = ?";
-    private static final String SQL_DELETE_ALL_TRANSACTIONS = "DELETE FROM ET_TRANSACTIONS WHERE CATEGORY_ID = ?";
+    private static final String SQL_UPDATE = "UPDATE categories SET title = ?, description = ? " +
+            "WHERE user_id = ? AND category_id = ?";
+    private static final String SQL_DELETE_CATEGORY = "DELETE FROM categories WHERE user_id = ? AND category_id = ?";
+    private static final String SQL_DELETE_ALL_TRANSACTIONS = "DELETE FROM transactions WHERE category_id = ?";
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -45,7 +45,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
         try {
             return jdbcTemplate.queryForObject(SQL_FIND_BY_ID, new Object[]{user_id, category_id}, categoryRowMapper);
         } catch (Exception e) {
-            throw new FinanceResourceNotFoundException("Category not found");
+            throw new FinanceResourceNotFoundException("Category not found" + e.getMessage());
         }
     }
 
@@ -62,7 +62,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
             }, keyHolder);
             return (Integer) keyHolder.getKeys().get("category_id");
         } catch (Exception e) {
-            throw new FinanceBadRequestException("Invalid request");
+            throw new FinanceBadRequestException("Invalid request" + e.getMessage());
         }
     }
 
@@ -72,7 +72,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
             jdbcTemplate.update(SQL_UPDATE, new Object[]{category.getTitle(), category.getDescription(), user_id,
             category_id});
         } catch (Exception e) {
-            throw new FinanceBadRequestException("Invalid request");
+            throw new FinanceBadRequestException("Invalid request" + e.getMessage());
         }
     }
 
