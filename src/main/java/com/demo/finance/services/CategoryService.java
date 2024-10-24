@@ -11,5 +11,5 @@ public interface CategoryService {
     Category fetchCategoryById(Integer user_id, Integer category_id) throws FinanceResourceNotFoundException;
     Category addCategory(Integer user_id, String title, String description) throws FinanceBadRequestException;
     void updateCategory(Integer user_id, Integer category_id, Category category) throws FinanceBadRequestException;
-    void deleteCategoryWithAllTransactions(Integer user_id, Integer category_id) throws FinanceResourceNotFoundException;
+    void removeCategoryWithAllTransactions(Integer user_id, Integer category_id) throws FinanceResourceNotFoundException;
 }

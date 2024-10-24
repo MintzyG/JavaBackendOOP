@@ -11,5 +11,5 @@ public interface CategoryRepository {
     Category findById(Integer user_id, Integer category_id) throws FinanceResourceNotFoundException;
     Integer create(Integer user_id, String title, String description) throws FinanceBadRequestException;
     void update(Integer user_id, Integer category_id, Category category) throws FinanceBadRequestException;
-    void deleteById(Integer user_id, Integer category_id);
+    void removeById(Integer user_id, Integer category_id);
 }

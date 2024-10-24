@@ -15,6 +15,10 @@ import java.util.List;
 
 @Repository
 public class CategoryRepositoryImpl implements CategoryRepository {
+    private static final String SQL_FIND_ALL = "SELECT c.category_id, c.user_id, c.title, c.description, " +
+            "COALESCE(SUM(t.amount), 0) total_expense " +
+            "FROM transactions t RIGHT OUTER JOIN categories c ON c.category_id = t.category_id " +
+            "WHERE c.user_id = ? GROUP BY c.category_id ";
 
     private static final String SQL_CREATE =
             "INSERT INTO categories (category_id, user_id, title, description) VALUES (NEXTVAL('cat_seq'), ?, ?, ?)";
@@ -23,13 +27,17 @@ public class CategoryRepositoryImpl implements CategoryRepository {
             "COALESCE(SUM(t.amount), 0) total_expense " +
             "FROM transactions t RIGHT OUTER JOIN categories c ON c.category_id = t.category_id " +
             "WHERE c.user_id = ? AND c.category_id = ? GROUP BY c.category_id ";
+    private static final String SQL_UPDATE = "UPDATE categories SET title = ?, description = ? " +
+            "WHERE user_id = ? AND category_id = ?";
+    private static final String SQL_DELETE_CATEGORY = "DELETE FROM categories WHERE user_id = ? AND category_id = ?";
+    private static final String SQL_DELETE_ALL_TRANSACTIONS = "DELETE FROM transactions WHERE category_id = ?";
 
     @Autowired
     JdbcTemplate jdbcTemplate;
 
     @Override
     public List<Category> findAll(Integer user_id) throws FinanceResourceNotFoundException {
-        return List.of();
+        return jdbcTemplate.query(SQL_FIND_ALL, new Object[]{user_id}, categoryRowMapper);
     }
 
     @Override
@@ -37,7 +45,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
         try {
             return jdbcTemplate.queryForObject(SQL_FIND_BY_ID, new Object[]{user_id, category_id}, categoryRowMapper);
         } catch (Exception e) {
-            throw new FinanceResourceNotFoundException("Category not found");
+            throw new FinanceResourceNotFoundException("Category not found" + e.getMessage());
         }
     }
 
@@ -54,18 +62,28 @@ public class CategoryRepositoryImpl implements CategoryRepository {
             }, keyHolder);
             return (Integer) keyHolder.getKeys().get("category_id");
         } catch (Exception e) {
-            throw new FinanceBadRequestException("Invalid request");
+            throw new FinanceBadRequestException("Invalid request" + e.getMessage());
         }
     }
 
     @Override
     public void update(Integer user_id, Integer category_id, Category category) throws FinanceBadRequestException {
-
+        try {
+            jdbcTemplate.update(SQL_UPDATE, new Object[]{category.getTitle(), category.getDescription(), user_id,
+            category_id});
+        } catch (Exception e) {
+            throw new FinanceBadRequestException("Invalid request" + e.getMessage());
+        }
     }
 
     @Override
-    public void deleteById(Integer user_id, Integer category_id) {
+    public void removeById(Integer user_id, Integer category_id) {
+        this.removeAllCatTransactions(category_id);
+        jdbcTemplate.update(SQL_DELETE_CATEGORY, new Object[]{user_id, category_id});
+    }
 
+    private void removeAllCatTransactions(Integer category_id) {
+        jdbcTemplate.update(SQL_DELETE_ALL_TRANSACTIONS, new Object[]{category_id});
     }
 
     private RowMapper<Category> categoryRowMapper = ((rs, rowNum) -> {
