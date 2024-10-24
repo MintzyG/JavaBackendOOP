@@ -18,7 +18,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
 
     private static final String SQL_FIND_ALL = "SELECT transaction_id, category_id, user_id, amount, note, transaction_date FROM transactions WHERE user_id = ? AND category_id = ?";
     private static final String SQL_FIND_BY_ID = "SELECT transaction_id, category_id, user_id, amount, note, transaction_date FROM transactions WHERE user_id = ? AND category_id = ? AND transaction_id = ?";
-    private static final String SQL_CREATE = "INSERT INTO transactions (transaction_id, category_id, user_id, amount, note, transaction_date) VALUES('trans_seq', ?, ?, ?, ?, ?)";
+    private static final String SQL_CREATE = "INSERT INTO transactions (transaction_id, category_id, user_id, amount, note, transaction_date) VALUES (NEXTVAL('trans_seq'), ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = "UPDATE transactions SET amount = ?, note = ?, transaction_date = ? WHERE user_id = ? AND category_id = ? AND transaction_id = ?";
     private static final String SQL_DELETE = "DELETE FROM transactions WHERE user_id = ? AND category_id = ? AND transaction_id = ?";
 
@@ -81,9 +81,9 @@ public class TransactionRepositoryImpl implements TransactionRepository {
                 rs.getInt("transaction_id"),
                 rs.getInt("category_id"),
                 rs.getInt("user_id"),
-                rs.getLong("transaction_date"),
+                rs.getDouble("amount"),
                 rs.getString("note"),
-                rs.getDouble("amount")
+                rs.getLong("transaction_date")
         );
     });
 

@@ -9,13 +9,13 @@ public class Transaction {
     private String note;
     private Long transaction_date;
 
-    public Transaction(Integer transaction_id, Integer category_id, Integer user_id, Long transaction_date, String note, Double amount) {
+    public Transaction(Integer transaction_id, Integer category_id, Integer user_id, Double amount, String note, Long transaction_date) {
         this.transaction_id = transaction_id;
         this.category_id = category_id;
         this.user_id = user_id;
-        this.transaction_date = transaction_date;
-        this.note = note;
         this.amount = amount;
+        this.note = note;
+        this.transaction_date = transaction_date;
     }
 
     public Integer getTransaction_id() {
